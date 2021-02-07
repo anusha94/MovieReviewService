@@ -77,7 +77,7 @@ public class ReviewService {
             boolean reviewPresent = userReviews.get(userName).stream()
                     .anyMatch(review -> movieName.equals(review.getMovieName()));
             if (reviewPresent) {
-                throw new MultipleReviewException("user already reviewed movie"); // TODO: make exception class
+                throw new MultipleReviewException("user already reviewed movie");
             }
         }
 

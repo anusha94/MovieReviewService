@@ -18,7 +18,7 @@ public class UserService {
 
     public User addUser(String userName) throws UserAlreadyExistsException {
         this.checkNewUser(userName);
-        User user = new User(userName, "viewer"); // TODO: make factory
+        User user = new User(userName, "viewer");
         users.put(userName, user);
         return user;
     }
@@ -30,7 +30,7 @@ public class UserService {
     }
     public void userExists(String username) throws Exception{
         if (!users.containsKey(username)) {
-            throw new UserNotFoundException("user does not exist"); // TODO: create exception class
+            throw new UserNotFoundException("user does not exist");
         }
     }
 
