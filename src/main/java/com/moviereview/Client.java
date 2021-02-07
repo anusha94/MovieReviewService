@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 public class Client {
 
     private static Logger logger = Logger.getLogger(Client.class.getName());
+    private static DecimalFormat df2 = new DecimalFormat("#.##");
 
     public static void main(String args[]) throws Exception {
         ApplicationContext context = SpringApplication.run(Client.class, args);
@@ -51,7 +54,7 @@ public class Client {
         reviewService.addReview(u3.getName(), m1.getName(), 9.0f);
         reviewService.addReview(u3.getName(), m5.getName(), 6.0f);
         reviewService.addReview(u3.getName(), m4.getName(), 5.0f);
-        
+
         try {
             reviewService.addReview(u1.getName(), m1.getName(), 10f);
         } catch (MultipleReviewException ex) {
@@ -64,5 +67,13 @@ public class Client {
             logger.log(Level.SEVERE, ex.getMessage());
         }
 
+        df2.setRoundingMode(RoundingMode.DOWN);
+        logger.log(Level.INFO, "average review score for movie "
+                + m1.getName()
+                + " is: "
+                + df2.format(reviewService.getAverageReviewScoreForMovie(m1.getName())) );
+
+        logger.log(Level.INFO, "average review score for the year 2006 is: "
+                + df2.format(reviewService.getAverageReviewScoreInYear("2006")));
     }
 }
