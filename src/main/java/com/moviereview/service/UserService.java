@@ -1,5 +1,6 @@
 package com.moviereview.service;
 
+import com.moviereview.exception.UserAlreadyExistsException;
 import com.moviereview.exception.UserNotFoundException;
 import com.moviereview.model.User;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,18 @@ public class UserService {
     private static final Map<String, User> users = new HashMap<>();
 
 
-    public User addUser(String userName) {
+    public User addUser(String userName) throws UserAlreadyExistsException {
+        this.checkNewUser(userName);
         User user = new User(userName, "viewer"); // TODO: make factory
         users.put(userName, user);
         return user;
     }
 
+    private void checkNewUser(String userName) throws UserAlreadyExistsException {
+        if (users.containsKey(userName)) {
+            throw new UserAlreadyExistsException("user already exists");
+        }
+    }
     public void userExists(String username) throws Exception{
         if (!users.containsKey(username)) {
             throw new UserNotFoundException("user does not exist"); // TODO: create exception class

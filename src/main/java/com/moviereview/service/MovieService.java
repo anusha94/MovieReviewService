@@ -1,5 +1,6 @@
 package com.moviereview.service;
 
+import com.moviereview.exception.MovieAlreadyExistsException;
 import com.moviereview.exception.MovieNotFoundException;
 import com.moviereview.model.Movie;
 import org.springframework.stereotype.Component;
@@ -15,10 +16,17 @@ public class MovieService {
     private static final Map<String, Movie> movies = new HashMap<>();
 
 
-    public Movie addMovie(String movieName, String year, List<String> genre) {
+    public Movie addMovie(String movieName, String year, List<String> genre) throws MovieAlreadyExistsException {
+        this.checkNewMovie(movieName);
         Movie movie = new Movie(movieName, year, genre);
         movies.put(movieName, movie);
         return movie;
+    }
+
+    private void checkNewMovie(String movieName) throws MovieAlreadyExistsException {
+        if (movies.containsKey(movieName)) {
+            throw new MovieAlreadyExistsException("movie already exists");
+        }
     }
 
     public static void movieExists(Map<String, Movie> movies, String movieName) throws Exception {

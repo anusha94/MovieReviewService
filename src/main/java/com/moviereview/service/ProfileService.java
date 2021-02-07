@@ -61,5 +61,11 @@ public class ProfileService {
         }
     }
 
+    public void checkProfileExists(String profile) throws UserProfileNotFoundException {
+        if (!userProfile.containsKey(profile)) {
+            throw new UserProfileNotFoundException("user profile " + profile + " not found");
+        }
+    }
+
 
 }

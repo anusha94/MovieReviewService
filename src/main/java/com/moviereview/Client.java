@@ -38,6 +38,7 @@ public class Client {
         Movie m4 = movieService.addMovie("Lunchbox", "2021", Arrays.asList("drama"));
         Movie m5 = movieService.addMovie("Guru", "2006", Arrays.asList("drama"));
         Movie m6 = movieService.addMovie("Metro", "2006", Arrays.asList("romance"));
+        Movie m7 = movieService.addMovie("Raees", "2019", Arrays.asList("drama"));
 
         User u1 = userService.addUser("SRK");
         User u2 = userService.addUser("Salman");
@@ -58,6 +59,10 @@ public class Client {
         reviewService.addReview(u3.getName(), m5.getName(), 6.0f);
         reviewService.addReview(u3.getName(), m4.getName(), 5.0f);
         reviewService.addReview(u3.getName(), m2.getName(), 7.0f);
+        reviewService.addReview(u3.getName(), m7.getName(), 10.0f);
+        reviewService.addReview(u1.getName(), m7.getName(), 3.0f);
+        reviewService.addReview(u2.getName(), m7.getName(), 6.5f);
+        reviewService.addReview(u1.getName(), m4.getName(), 8.5f);
 
         try {
             reviewService.addReview(u1.getName(), m1.getName(), 10f);
