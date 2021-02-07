@@ -1,6 +1,5 @@
 package com.moviereview.service;
 
-import com.moviereview.Client;
 import com.moviereview.exception.InvalidRatingException;
 import com.moviereview.exception.MultipleReviewException;
 import com.moviereview.model.Movie;
