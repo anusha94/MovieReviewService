@@ -1,5 +1,6 @@
 package com.moviereview.service;
 
+import com.moviereview.exception.MovieNotFoundException;
 import com.moviereview.model.Movie;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ public class MovieService {
 
     private static final Map<String, Movie> movies = new HashMap<>();
 
+
     public Movie addMovie(String movieName, String year, List<String> genre) {
         Movie movie = new Movie(movieName, year, genre);
         movies.put(movieName, movie);
@@ -21,7 +23,7 @@ public class MovieService {
 
     public static void movieExists(Map<String, Movie> movies, String movieName) throws Exception {
         if (!movies.containsKey(movieName)) {
-            throw new Exception("movie does not exist"); // TODO: make exception class
+            throw new MovieNotFoundException("movie does not exist"); // TODO: make exception class
         }
     }
 

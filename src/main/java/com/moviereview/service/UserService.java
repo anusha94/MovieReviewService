@@ -1,5 +1,6 @@
 package com.moviereview.service;
 
+import com.moviereview.exception.UserNotFoundException;
 import com.moviereview.model.User;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +16,14 @@ public class UserService {
 
 
     public User addUser(String userName) {
-        User user = new User(userName); // TODO: make factory
+        User user = new User(userName, "viewer"); // TODO: make factory
         users.put(userName, user);
         return user;
     }
 
     public void userExists(String username) throws Exception{
         if (!users.containsKey(username)) {
-            throw new Exception("user does not exist"); // TODO: create exception class
+            throw new UserNotFoundException("user does not exist"); // TODO: create exception class
         }
     }
 

@@ -1,5 +1,7 @@
 package com.moviereview;
 
+import com.moviereview.exception.InvalidRatingException;
+import com.moviereview.exception.MultipleReviewException;
 import com.moviereview.model.Movie;
 import com.moviereview.model.User;
 import com.moviereview.service.MovieService;
@@ -11,11 +13,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Configuration
 @ComponentScan(basePackages = {"com.moviereview.service"},
-            basePackageClasses = ReviewService.class)
+            basePackageClasses = {ReviewService.class, UserService.class})
 public class Client {
+
+    private static Logger logger = Logger.getLogger(Client.class.getName());
 
     public static void main(String args[]) throws Exception {
         ApplicationContext context = SpringApplication.run(Client.class, args);
@@ -34,17 +40,29 @@ public class Client {
         User u2 = userService.addUser("Salman");
         User u3 = userService.addUser("Deepika");
 
+        logger.log(Level.INFO, "u1 profile: " + u1.getProfile());
         reviewService.addReview(u1.getName(), m1.getName(), 3.5f);
         reviewService.addReview(u1.getName(), m3.getName(), 5.0f);
+        reviewService.addReview(u1.getName(), m2.getName(), 5.8f);
+        logger.log(Level.INFO, "u1 number of reviews: " + u1.getNumReviews());
+        logger.log(Level.INFO, "u1 updated profile: " + u1.getProfile());
+
         reviewService.addReview(u2.getName(), m1.getName(), 5.0f);
         reviewService.addReview(u3.getName(), m1.getName(), 9.0f);
         reviewService.addReview(u3.getName(), m5.getName(), 6.0f);
-        //reviewService.addReview(u1.getName(), m1.getName(), 10f);
         reviewService.addReview(u3.getName(), m4.getName(), 5.0f);
-        //reviewService.addReview(u1.getName(), m1.getName(), 3.5f);
+        
+        try {
+            reviewService.addReview(u1.getName(), m1.getName(), 10f);
+        } catch (MultipleReviewException ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
+        }
 
-
-
+        try {
+            reviewService.addReview(u2.getName(), m4.getName(), 11f);
+        } catch (InvalidRatingException ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
+        }
 
     }
 }

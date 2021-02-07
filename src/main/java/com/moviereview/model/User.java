@@ -13,8 +13,10 @@ public class User {
     private Integer numReviews = 0;
     private String profile;
 
-    public User(String name) {
+    public User(String name, String profile) {
+
         this.name = name;
+        this.profile = profile;
     }
 
     public void addReview() {
