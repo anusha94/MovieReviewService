@@ -1,5 +1,6 @@
 package com.moviereview.service;
 
+import com.moviereview.Client;
 import com.moviereview.exception.InvalidRatingException;
 import com.moviereview.exception.MultipleReviewException;
 import com.moviereview.model.Movie;
@@ -9,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Component
 public class ReviewService {
+
+    private static Logger logger = Logger.getLogger(ReviewService.class.getName());
 
     private final UserService userService;
 
@@ -43,6 +48,13 @@ public class ReviewService {
                 user.getProfile());
         this.addReviewToMap(movieReviews, movieName, review);
         this.addReviewToMap(userReviews, userName, review);
+        logger.log(Level.INFO, "user "
+                + user.getName()
+                + " having profile "
+                + user.getProfile()
+                + " original score of "
+                + rating + " and calculated score of "
+                + review.getRating());
         this.profileService.updateUserProfile(userName);
     }
 
@@ -101,6 +113,23 @@ public class ReviewService {
     public Double getAverageReviewScoreForMovie(String movieName) {
         List<Review> reviews = movieReviews.get(movieName);
         return this.getAverage(reviews);
+    }
+
+    public List<String> getTopMoviesByProfileAndGenre(Integer top, String profile, String genre) {
+        List<Movie> moviesByGenre = this.movieService.getMoviesByGenre(genre);
+        if (moviesByGenre.size() == 0) {
+            logger.log(Level.SEVERE, "no movies in the given genre");
+            return new ArrayList<String>();
+        }
+        List<Review> movies = this.getReviewByMovieNames(moviesByGenre);
+        List<Review> topReviews = movies.stream()
+                .filter(review -> profile.equals(review.getProfile()))
+                .sorted((a, b) -> b.getRating().compareTo(a.getRating()))
+                .limit(top)
+                .collect(Collectors.toList());
+        return topReviews.stream()
+                .map(review -> review.getMovieName())
+                .collect(Collectors.toList());
     }
 
 

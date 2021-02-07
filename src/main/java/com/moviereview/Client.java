@@ -42,6 +42,7 @@ public class Client {
         User u1 = userService.addUser("SRK");
         User u2 = userService.addUser("Salman");
         User u3 = userService.addUser("Deepika");
+        User u4 = userService.addUser("Javed");
 
         logger.log(Level.INFO, "u1 profile: " + u1.getProfile());
         reviewService.addReview(u1.getName(), m1.getName(), 3.5f);
@@ -51,9 +52,12 @@ public class Client {
         logger.log(Level.INFO, "u1 updated profile: " + u1.getProfile());
 
         reviewService.addReview(u2.getName(), m1.getName(), 5.0f);
+        reviewService.addReview(u2.getName(), m4.getName(), 9.0f);
+        reviewService.addReview(u2.getName(), m6.getName(), 6.0f);
         reviewService.addReview(u3.getName(), m1.getName(), 9.0f);
         reviewService.addReview(u3.getName(), m5.getName(), 6.0f);
         reviewService.addReview(u3.getName(), m4.getName(), 5.0f);
+        reviewService.addReview(u3.getName(), m2.getName(), 7.0f);
 
         try {
             reviewService.addReview(u1.getName(), m1.getName(), 10f);
@@ -62,7 +66,7 @@ public class Client {
         }
 
         try {
-            reviewService.addReview(u2.getName(), m4.getName(), 11f);
+            reviewService.addReview(u2.getName(), m5.getName(), 11f);
         } catch (InvalidRatingException ex) {
             logger.log(Level.SEVERE, ex.getMessage());
         }
@@ -75,5 +79,11 @@ public class Client {
 
         logger.log(Level.INFO, "average review score for the year 2006 is: "
                 + df2.format(reviewService.getAverageReviewScoreInYear("2006")));
+
+        logger.log(Level.INFO, "getting top 3 movies reviewed by critics for the genre drama: "
+                + reviewService.getTopMoviesByProfileAndGenre(3, "critic", "drama").toString());
+
+        logger.log(Level.INFO, "Users who are viewers: " + userService.getUsersByProfile("viewer"));
+        logger.log(Level.INFO, "Users who are critics: " + userService.getUsersByProfile("critic"));
     }
 }
