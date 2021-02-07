@@ -11,11 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class MovieService {
 
-    private Map<String, Movie> movies;
-
-    public MovieService() {
-        movies = new HashMap<>();
-    }
+    private static final Map<String, Movie> movies = new HashMap<>();
 
     public Movie addMovie(String movieName, String year, List<String> genre) {
         Movie movie = new Movie(movieName, year, genre);
@@ -30,12 +26,12 @@ public class MovieService {
     }
 
     public Movie getMovie(String movieName) throws Exception {
-        MovieService.movieExists(this.movies, movieName);
-        return this.movies.get(movieName);
+        MovieService.movieExists(movies, movieName);
+        return movies.get(movieName);
     }
 
     public List<Movie> getMoviesByGenre(String genre) {
-        List<Movie> moviesByGenre = this.movies.values()
+        List<Movie> moviesByGenre = movies.values()
                 .stream()
                 .filter((movie) -> movie.getGenre()
                         .contains(genre))
@@ -44,7 +40,7 @@ public class MovieService {
     }
 
     public List<Movie> getMoviesByReleaseYear(String year) {
-        List<Movie> moviesByYear = this.movies.values()
+        List<Movie> moviesByYear = movies.values()
                 .stream()
                 .filter(movie -> year.equals(movie.getYear()))
                 .collect(Collectors.toList());

@@ -11,11 +11,8 @@ import java.util.stream.Collectors;
 @Component
 public class UserService {
 
-    private Map<String, User> users;
+    private static final Map<String, User> users = new HashMap<>();
 
-    public UserService()  {
-        users = new HashMap<>();
-    }
 
     public User addUser(String userName) {
         User user = new User(userName); // TODO: make factory
@@ -31,18 +28,18 @@ public class UserService {
 
     public User getUser(String userName) throws Exception {
         this.userExists(userName);
-        return this.users.get(userName);
+        return users.get(userName);
     }
 
     public void incrementReviews(String userName) throws Exception {
         this.userExists(userName);
-        User user = this.users.get(userName);
+        User user = users.get(userName);
         user.addReview();
-        this.users.put(userName, user);
+        users.put(userName, user);
     }
 
     public List<User> getUsersByProfile(String profile) {
-        List<User> usersByProfile = this.users.values()
+        List<User> usersByProfile = users.values()
                 .stream()
                 .filter(user -> profile.equals(user.getProfile()))
                 .collect(Collectors.toList());

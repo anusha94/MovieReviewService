@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,14 +15,18 @@ import java.util.stream.Collectors;
 @Component
 public class ReviewService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final MovieService movieService;
+
+    private final static Map<String, List<Review>> movieReviews = new HashMap<>();
+    private final static Map<String, List<Review>> userReviews = new HashMap<>();
 
     @Autowired
-    private MovieService movieService;
-
-    private static Map<String, List<Review>> movieReviews;
-    private static Map<String, List<Review>> userReviews;
+    ReviewService(UserService userService, MovieService movieService) {
+        this.userService = userService;
+        this.movieService = movieService;
+    }
 
     public void addReview(String userName, String movieName, Float rating) throws Exception {
         User user = userService.getUser(userName);
@@ -39,7 +44,7 @@ public class ReviewService {
 
     private void addReviewToMap(Map<String, List<Review>> map, String key, Review review) {
         List<Review> reviews = new ArrayList<>();
-        if (map.containsKey(key)) {
+        if (null != map && map.containsKey(key)) {
             reviews = map.get(key);
         }
         reviews.add(review);
@@ -52,11 +57,14 @@ public class ReviewService {
     }
 
     public void hasReviewed(String userName, String movieName) throws Exception {
-        Boolean reviewPresent = userReviews.get(userName).stream()
-                .anyMatch(review -> movieName.equals(review.getMovieName()));
-        if (reviewPresent) {
-            throw new Exception("user already reviewed movie"); // TODO: make exception class
+        if (userReviews.containsKey(userName)) {
+            boolean reviewPresent = userReviews.get(userName).stream()
+                    .anyMatch(review -> movieName.equals(review.getMovieName()));
+            if (reviewPresent) {
+                throw new Exception("user already reviewed movie"); // TODO: make exception class
+            }
         }
+
     }
 
     public List<String> getMoviesReviewedByUser(String userName) {
